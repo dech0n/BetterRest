@@ -31,7 +31,15 @@ struct ContentView: View {
                 
                 Stepper("\(coffeeAmount) cup(s)", value: $coffeeAmount, in: 1...20)
             }
+            .navigationTitle("BetterRest")
+            .toolbar {
+                Button("Calculate", action: calclateBedtime)
+            }
         }
+        
+    }
+    func calclateBedtime() {
+        
     }
 }
 
