@@ -9,8 +9,8 @@ import CoreML
 import SwiftUI
 
 struct ContentView: View {
-    @State private var sleepAmount = defaultWakeTime // possible b/c static
-    @State private var wakeUp = Date.now
+    @State private var sleepAmount = 8.0 // possible b/c static
+    @State private var wakeUp = defaultWakeTime
     @State private var coffeeAmount = 1
     
     @State private var alertTitle = ""
@@ -26,7 +26,7 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
+            Form {
                 Text("When do you want to wake up?")
                     .font(.headline)
                 
