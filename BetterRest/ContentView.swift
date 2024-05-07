@@ -14,7 +14,7 @@ struct ContentView: View {
     @State private var coffeeAmount = 1
     
     @State private var alertTitle = ""
-    @State private var alertMessage = ""
+    @State private var suggestedBedtime = "..."
     @State private var showingAlert = false
     
     static var defaultWakeTime: Date { // static makes sense b/c default value
@@ -38,21 +38,28 @@ struct ContentView: View {
                 
                 Section("Daily coffee intake") {
                     Picker("How many cups?", selection: $coffeeAmount) {
-                        ForEach(1...20, id: \.self) { number in
+                        ForEach(0...20, id: \.self) { number in
                             Text("\(number)")
                         }
                     }
                 }
+                
+                VStack {
+                    Text("Go to sleep by")
+                        .multilineTextAlignment(.center)
+                    Text("\(suggestedBedtime)")
+                        .multilineTextAlignment(.center)
+                }
+                .font(.title)
+                .frame(maxWidth: .infinity)
             }
             .navigationTitle("BetterRest")
-            .toolbar {
-                Button("Calculate", action: calclateBedtime)
-            }
-            .alert(alertTitle, isPresented: $showingAlert) {
-                Button("OK") { }
-            } message: {
-                Text(alertMessage)
-            }
+            .onChange(of: sleepAmount, calclateBedtime)
+            .onChange(of: wakeUp, calclateBedtime)
+            .onChange(of: coffeeAmount, calclateBedtime)
+            .onAppear(perform: {
+                calclateBedtime()
+            })
         }
         
     }
@@ -70,13 +77,10 @@ struct ContentView: View {
             
             let sleepTime = wakeUp - prediction.actualSleep // a date object
             
-            alertMessage = sleepTime.formatted(date: .omitted, time: .shortened) // a string
+            suggestedBedtime = sleepTime.formatted(date: .omitted, time: .shortened) // a string
         } catch {
-            alertTitle = "Error"
-            alertMessage = "Sorry, there was an error predicting your bedtime."
+            suggestedBedtime = "Sorry, there was an error predicting your bedtime."
         }
-        
-        showingAlert = true
     }
 }
 
